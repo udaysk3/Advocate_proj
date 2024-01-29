@@ -38,6 +38,7 @@ const Form = ({ title }) => {
     // isPetitioner: false,y
     clientContactNumber: '',
     respondentContactNumber: '',
+    fileList: [],
   });
 
   const handleChange = (event) => {
@@ -47,41 +48,6 @@ const Form = ({ title }) => {
       ...prevFormData,
       [name]: type === 'checkbox' ? checked : value,
     }));
-  };
-
-  const handleSubmit = () => {
-    console.log(formData)
-    setFormData({
-      clientName: '',
-      caseDescription: '',
-      respondentName: '',
-      respondentSeniorAdvocateName: '',
-      respondentJuniorAdvocateOneName: '',
-      respondentJuniorAdvocateTwoName: '',
-      comments: '',
-      caseType: '',
-      caseSubtype: '',
-      actNumber: '',
-      filingNumber: '',
-      filingDate: '',
-      caseStage: {
-        CLOSED: true,
-        FIR: false,
-        PENDING: false,
-      },
-      caseSeverity: {
-        LOW: true,
-        HIGH: false,
-        MEDIUM: false,
-      },
-      firstHearingDate: '',
-      nextHearingDate: '',
-      // isPetitioner: false,
-      // isRespondent: false,
-      clientContactNumber: '',
-      respondentContactNumber: '',
-      
-    })
   };
 
   return (
@@ -314,7 +280,6 @@ const Form = ({ title }) => {
               caseSeverity: Object.keys(formData.caseSeverity)
                 .filter((key) => formData.caseSeverity[key])[0]
             } }}
-          onClick={handleSubmit}
           style={{ backgroundColor: '#141963', textAlign: 'center', marginTop: '24px' }}
         >
           Next Page

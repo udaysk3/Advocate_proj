@@ -9,7 +9,8 @@ import { useLocation } from "react-router-dom";
 const Fir = () => {
   const location = useLocation();
   const { formData } = location.state;
-  const postData={...formData}
+  var postData = { ...formData }
+  console.log(formData)
   const initialFirData = {
     policeStation: '',
     FIRNumber: '',
@@ -20,7 +21,6 @@ const Fir = () => {
     judgePost: '',
     judgeName: '',
     caseStatus: '',
-    fileList: [],
   };
 
   const [firData, setFirData] = React.useState(initialFirData);
@@ -37,7 +37,7 @@ const Fir = () => {
     // Access the form data in the firData object
       postData = { ...postData, ...firData }
     
-      fetch('api/v1/case', {
+    fetch('http://127.0.0.1:8000/api/v1/case', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -89,8 +89,7 @@ const Fir = () => {
         }
       
       });
-
-      console.log('FIR Data:', postData);
+console.log(1)
     
     
 
@@ -214,7 +213,7 @@ const Fir = () => {
             component={Link}
             to="/documents"
             state={{
-              ...postData
+              formData: { ...postData }
             }}
           >
             UPLOAD DOCUMENT

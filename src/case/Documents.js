@@ -78,7 +78,9 @@ const Case = () => {
         options={options}
       />
       <div style={{ textAlign: 'center', marginTop: '20px' }}>
-        <Button variant="contained" component={Link} to="/fir" state={{ ...postData }} onClick={handleNextPage} style={{ backgroundColor: "#141963" }}>
+        <Button variant="contained" component={Link} to="/fir" state={{
+          formData: { ...formData }
+        }} style={{ backgroundColor: "#141963" }}>
           Next Page
         </Button>
       </div>

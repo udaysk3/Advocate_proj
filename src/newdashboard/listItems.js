@@ -10,11 +10,21 @@ import ScheduleIcon from '@mui/icons-material/Schedule';
 import FolderIcon from '@mui/icons-material/Folder';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Link } from 'react-router-dom';
+import Button from '@mui/material/Button';
+// import { useEffect, useState } from 'react';
 
-
+// const [signup,setSignup]=useState('');
 
 export const mainListItems = (
   <React.Fragment>
+    {/* <Button
+      type="submit"
+      fullWidth
+      variant="contained"
+      sx={{ mt: 3, mb: 2 }}
+    >
+      Sign Up
+    </Button> */}
     <ListItemButton>
       <ListItemIcon>
       <ListItemText primary="MAIN MENU" sx= {{ color: 'blue' }}/>
