@@ -8,7 +8,8 @@ import { useLocation } from "react-router-dom";
 
 const Fir = () => {
   const location = useLocation();
-  const { formData  } = location.state;
+  const { formData } = location.state;
+  const postData={...formData}
   const initialFirData = {
     policeStation: '',
     FIRNumber: '',
@@ -19,6 +20,7 @@ const Fir = () => {
     judgePost: '',
     judgeName: '',
     caseStatus: '',
+    fileList: [],
   };
 
   const [firData, setFirData] = React.useState(initialFirData);
@@ -33,63 +35,64 @@ const Fir = () => {
 
   const handleSubmit = () => {
     // Access the form data in the firData object
-    const postData = { ...formData, ...firData }
+      postData = { ...postData, ...firData }
     
-    fetch('api/v1/case', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiJjNTliYzUxOS05NmJkLTQ0YTQtYjJkNi03ODlhNTk4MmRhMjEiLCJlbWFpbCI6InB1dnZ1bGFzYWlnb3d0aGFtQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTcwNjUxOTY2MSwiZXhwIjoxNzA2NTIzMjYxfQ.NVdOEBFDpbG2q8pBMotYdRxFjCf7DOMLrSD8rqVj_1E'
-      },
-      body: {
-        "caseNumber": "CASE123",
-        "clientName": "Client ABC",
-        "clientContactNumber": "+1234567890",
-        "caseDescription": "Description of the case...",
-        "respondentName": "Respondent XYZ",
-        "respondentContactNumber": "+9876543210",
-        "respondentSeniorAdvocateName": "Senior Advocate PQR",
-        "respondentJuniorAdvocateOneName": "Junior Advocate JKL",
-        "respondentJuniorAdvocateTwoName": "Junior Advocate MNO",
-        "comments": [
-          "Comment 1",
-          "Comment 2"
-        ],
-        "caseStatus": "OPEN",
-        "caseType": "Civil",
-        "caseSubType": "Property Dispute",
-        "actNumber": "Act123",
-        "filingNumber": "FILING123",
-        "filingDate": "2023-01-15T00:00:00.000Z",
-        "caseStage": "PENDING",
-        "caseSeverity": "MEDIUM",
-        "firstHearingDate": "2023-02-01T10:00:00.000Z",
-        "nextHearingDate": "2023-03-01T10:00:00.000Z",
-        "policeStation": "City Police Station",
-        "FIRnumber": "FIR123",
-        "FIRdate": "2023-01-10T00:00:00.000Z",
-        "courtNumber": "Court123",
-        "courtType": "HIGHCOURT",
-        "judgePost": "District Judge",
-        "judgeName": "Judge ABC",
-        "fileList": [
-          {
-            "path": "/path/to/file1",
-            "tag": "Document",
-            "_id": "658c611f644846597987a755"
-          },
-          {
-            "path": "/path/to/file2",
-            "tag": "Evidence",
-            "_id": "658c611f644846597987a756"
-          }
-        ]
-      }
-    });
+      fetch('api/v1/case', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiJjNTliYzUxOS05NmJkLTQ0YTQtYjJkNi03ODlhNTk4MmRhMjEiLCJlbWFpbCI6InB1dnZ1bGFzYWlnb3d0aGFtQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTcwNjUxOTY2MSwiZXhwIjoxNzA2NTIzMjYxfQ.NVdOEBFDpbG2q8pBMotYdRxFjCf7DOMLrSD8rqVj_1E'
+        },
+        body: {
+          "caseNumber": "CASE123",
+          "clientName": "Client ABC",
+          "clientContactNumber": "+1234567890",
+          "caseDescription": "Description of the case...",
+          "respondentName": "Respondent XYZ",
+          "respondentContactNumber": "+9876543210",
+          "respondentSeniorAdvocateName": "Senior Advocate PQR",
+          "respondentJuniorAdvocateOneName": "Junior Advocate JKL",
+          "respondentJuniorAdvocateTwoName": "Junior Advocate MNO",
+          "comments": [
+            "Comment 1",
+            "Comment 2"
+          ],
+          "caseStatus": "OPEN",
+          "caseType": "Civil",
+          "caseSubType": "Property Dispute",
+          "actNumber": "Act123",
+          "filingNumber": "FILING123",
+          "filingDate": "2023-01-15T00:00:00.000Z",
+          "caseStage": "PENDING",
+          "caseSeverity": "MEDIUM",
+          "firstHearingDate": "2023-02-01T10:00:00.000Z",
+          "nextHearingDate": "2023-03-01T10:00:00.000Z",
+          "policeStation": "City Police Station",
+          "FIRnumber": "FIR123",
+          "FIRdate": "2023-01-10T00:00:00.000Z",
+          "courtNumber": "Court123",
+          "courtType": "HIGHCOURT",
+          "judgePost": "District Judge",
+          "judgeName": "Judge ABC",
+          "fileList": [
+            {
+              "path": "/path/to/file1",
+              "tag": "Document",
+              "_id": "658c611f644846597987a755"
+            },
+            {
+              "path": "/path/to/file2",
+              "tag": "Evidence",
+              "_id": "658c611f644846597987a756"
+            }
+          ]
+        }
+      
+      });
 
-    console.log('FIR Data:', postData);
+      console.log('FIR Data:', postData);
     
-
+    
 
     // Reset the form data after submission if needed
     setFirData(initialFirData);
@@ -209,7 +212,10 @@ const Fir = () => {
             variant="contained"
             style={{ backgroundColor: "#141963" }}
             component={Link}
-            to="/"
+            to="/documents"
+            state={{
+              ...postData
+            }}
           >
             UPLOAD DOCUMENT
           </Button>

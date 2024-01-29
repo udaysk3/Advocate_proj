@@ -11,7 +11,6 @@ import Checkbox from '@mui/material/Checkbox';
 
 const Form = ({ title }) => {
   const [formData, setFormData] = React.useState({
-    caseNumber: '',
     clientName: '',
     caseDescription: '',
     respondentName: '',
@@ -53,7 +52,6 @@ const Form = ({ title }) => {
   const handleSubmit = () => {
     console.log(formData)
     setFormData({
-      caseNumber: '',
       clientName: '',
       caseDescription: '',
       respondentName: '',
@@ -137,6 +135,8 @@ const Form = ({ title }) => {
           onChange={handleChange}
           name="respondentName"
         />
+          </div>
+          <div>
         <TextField
           id="respondentContactNumber"
           label="Respondent Contact Number"
@@ -144,10 +144,8 @@ const Form = ({ title }) => {
           onChange={handleChange}
           name="respondentContactNumber"
         />
-      </div>
 
       {/* Advocate Details Section */}
-      <div>
         <TextField
           id="respondentSeniorAdvocateName"
           label="Respondent Senior Advocate Name"
@@ -162,6 +160,8 @@ const Form = ({ title }) => {
           onChange={handleChange}
           name="respondentJuniorAdvocateOneName"
         />
+          </div>
+          <div>
         <TextField
           id="respondentJuniorAdvocateTwoName"
           label="Respondent Junior Advocate 2"
@@ -169,18 +169,9 @@ const Form = ({ title }) => {
           onChange={handleChange}
           name="respondentJuniorAdvocateTwoName"
         />
-      </div>
 
       {/* Case Details Section */}
-      <div>
-        <TextField
-          id="caseNumber"
-          label="Case Number"
-          value={formData.caseNumber}
-          onChange={handleChange}
-          name="caseNumber"
-          maxRows={2}
-        />
+       
         <TextField
           id="caseType"
           label="Case Type"
@@ -195,11 +186,11 @@ const Form = ({ title }) => {
           onChange={handleChange}
           name="caseSubtype"
           maxRows={2}
-        />
+          />
       </div>
 
       {/* Additional Case Information Section */}
-      <div>
+          <div>
         <TextField
           id="actNumber"
           label="Act Number"
@@ -222,9 +213,9 @@ const Form = ({ title }) => {
           onChange={handleChange}
           name="filingDate"
           maxRows={2}
-        />
-      </div>
+          />
 
+          </div>
       {/* Stage and Severity Section */}
       <Box sx={{ display: 'flex' }}>
         <FormControl
