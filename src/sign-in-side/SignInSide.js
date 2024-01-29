@@ -43,7 +43,6 @@ export default function SignInSide() {
             backgroundPosition: 'center',
           }}
         />
-        <img src={img} alt="img" />
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
           <Box
             sx={{

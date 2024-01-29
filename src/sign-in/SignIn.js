@@ -12,18 +12,62 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
+import Cookies from 'universal-cookie';
+import { useState } from 'react';
+
+
+
+
+
+const cookies = new Cookies();
 
 
 const defaultTheme = createTheme();
 
 export default function SignIn() {
+  const [email, setEmail] = useState('');
+
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+  };
+  const handleForgot = () => {
+    fetch('http://127.0.0.1:8000/api/v1/forgotpassword', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        "email": email,
+      }),
+    }).then((res) => {
+      return (res.json())
+    }).then((data) => {
+      console.log(data)
+    });
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
+    fetch('http://127.0.0.1:8000/api/v1/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        "email": data.get("email"),
+        "password": data.get("password")
+      }),
+    }).then((res) => {
+      return (res.json())
+    }).then((data) => {
+      console.log(data)
+      cookies.set('token', data.data);
+      console.log(cookies.get('token'));
+
     });
+    window.location.reload();
+    window.location.href = '/';
   };
 
   return (
@@ -41,7 +85,7 @@ export default function SignIn() {
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography  variant="h5" component= "h1" > 
+          <Typography variant="h5" component="h1" >
             Sign in
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
@@ -53,6 +97,8 @@ export default function SignIn() {
               label="Email Address"
               name="email"
               autoComplete="email"
+              value={email}
+              onChange={handleEmailChange}
               autoFocus
             />
             <TextField
@@ -73,19 +119,19 @@ export default function SignIn() {
               type="submit"
               fullWidth
               variant="contained"
-              component={Link} to = "/SignInSide"
+              // component={Link} to = "/SignInSide"
               sx={{ mt: 3, mb: 2 }}
             >
               Sign In
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
+                <Link onClick={handleForgot} variant="body2">
                   Forgot password?
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link to="/signup" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
