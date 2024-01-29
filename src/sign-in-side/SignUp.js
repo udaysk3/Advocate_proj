@@ -56,6 +56,8 @@ export default function SignUp() {
       console.log(cookies.get('token')); 
 
     });
+    window.location.reload();
+    window.location.href = '/';
   };
   const [role, setRole] = React.useState('');
 
@@ -245,7 +247,7 @@ export default function SignUp() {
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link to="/signin" variant="body2">
-                  Already have an account? Sign in
+                  {'Already have an account? Sign in'}
                 </Link>
               </Grid>
             </Grid>
