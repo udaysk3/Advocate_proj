@@ -20,10 +20,22 @@ export default function SignIn() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    const res = fetch('http://127.0.0.1:8000/api/v1/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        "email": data.get("email"),
+        "password": data.get("password")
+      }),
+    });
+    console.log(res)
     console.log({
       email: data.get('email'),
       password: data.get('password'),
     });
+    
   };
 
   return (
@@ -41,7 +53,7 @@ export default function SignIn() {
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography  variant="h5" component= "h1" > 
+          <Typography variant="h5" component="h1" >
             Sign in
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
@@ -73,7 +85,7 @@ export default function SignIn() {
               type="submit"
               fullWidth
               variant="contained"
-              component={Link} to = "/SignInSide"
+              // component={Link} to = "/SignInSide"
               sx={{ mt: 3, mb: 2 }}
             >
               Sign In

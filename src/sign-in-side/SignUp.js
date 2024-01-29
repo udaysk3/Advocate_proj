@@ -18,6 +18,30 @@ export default function SignUp() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    const res = fetch('http://127.0.0.1:8000/api/v1/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        "name": data.get('firstName') + data.get("lastName"),
+        "email": data.get("email"),
+        "password": data.get("password"),
+        "phone": {
+          "country_isd_code": "+91",
+          "number": "9705795884"
+        },
+        "address": {
+          "street": "sample",
+          "city": "sample",
+          "state": "sample",
+          "postalCode": "sample",
+          "country": "sample"
+        },
+        "role": "ADMIN"
+      }),
+    });
+    console.log(res)
     console.log({
       email: data.get('email'),
       password: data.get('password'),
