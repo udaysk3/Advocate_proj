@@ -54,7 +54,6 @@ export default function SignUp() {
       console.log(data)
       cookies.set('token', data.data);
       console.log(cookies.get('token')); 
-
     });
     window.location.reload();
     window.location.href = '/';

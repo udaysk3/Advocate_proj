@@ -66,7 +66,8 @@ export default function SignIn() {
       console.log(cookies.get('token'));
 
     });
-    
+    window.location.reload();
+    window.location.href = '/';
   };
 
   return (
