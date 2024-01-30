@@ -35,7 +35,6 @@ const Form = ({ title }) => {
     },
     firstHearingDate: '',
     nextHearingDate: '',
-    // isPetitioner: false,y
     clientContactNumber: '',
     respondentContactNumber: '',
     fileList: [],

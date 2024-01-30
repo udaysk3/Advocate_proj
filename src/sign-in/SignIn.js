@@ -14,6 +14,9 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 import { useState } from 'react';
+import { useNavigate } from "react-router-dom";
+
+
 
 
 
@@ -25,6 +28,8 @@ const cookies = new Cookies();
 const defaultTheme = createTheme();
 
 export default function SignIn() {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState('');
 
   const handleEmailChange = (event) => {
@@ -66,8 +71,8 @@ export default function SignIn() {
       console.log(cookies.get('token'));
 
     });
-    window.location.reload();
-    window.location.href = '/';
+    navigate("/about");
+
   };
 
   return (

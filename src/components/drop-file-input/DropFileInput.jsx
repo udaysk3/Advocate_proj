@@ -15,6 +15,7 @@ const DropFileInput = () => {
   const wrapperRef = useRef(null);
 
   const [fileList, setFileList] = useState([]);
+  const [open, setOpen] = useState(false);
 
   const onDragEnter = () => wrapperRef.current.classList.add('dragover');
 
@@ -27,7 +28,6 @@ const DropFileInput = () => {
     if (newFile && newFile.type === 'application/pdf') {
       const updatedList = [...fileList, newFile];
       setFileList(updatedList);
-     
     } else {
       console.log('Please upload a PDF file.');
     }
@@ -36,7 +36,6 @@ const DropFileInput = () => {
   const fileRemove = (file) => {
     const updatedList = fileList.filter((item) => item !== file);
     setFileList(updatedList);
-   
   };
 
   const handleRemoveKeyDown = (event, file) => {
@@ -44,39 +43,38 @@ const DropFileInput = () => {
       fileRemove(file);
     }
   };
-  const [open, setOpen] = React.useState(false);
-  const anchorRef = React.useRef(null);
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
 
   const handleClose = (event) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+    if (wrapperRef.current && wrapperRef.current.contains(event.target)) {
       return;
     }
-
     setOpen(false);
   };
 
-  function handleListKeyDown(event) {
+  const handleListKeyDown = (event) => {
     if (event.key === 'Tab') {
       event.preventDefault();
       setOpen(false);
     } else if (event.key === 'Escape') {
       setOpen(false);
     }
-  }
+  };
 
-  const prevOpen = React.useRef(open);
-  React.useEffect(() => {
-    if (prevOpen.current === true && open === false) {
-      anchorRef.current.focus();
-    }
+  const handleCompositionSelect = (composition) => {
+    // Handle the selected composition (e.g., set it in state)
+    console.log('Selected Composition:', composition);
+    setOpen(false);
+  };
 
-    prevOpen.current = open;
-  }, [open]);
-
+  const handleUpload = () => {
+    // Handle the file upload logic here
+    console.log('Uploading Files:', fileList);
+    // You can perform additional actions like sending files to a server here
+  };
 
   return (
     <>
@@ -101,12 +99,10 @@ const DropFileInput = () => {
                 src={ImageConfig[item.type.split('/')[1]] || ImageConfig['default']}
                 alt=""
               />
-        
               <div className="drop-file-preview__item__info">
                 <p>{item.name}</p>
                 <p>{item.size}B</p>
               </div>
-        
               <button
                 className="drop-file-preview__item__del"
                 onClick={() => fileRemove(item)}
@@ -116,68 +112,68 @@ const DropFileInput = () => {
                 x
               </button>
               <Stack direction="row" spacing={5}>
-   
-   <div>
-     <Button
-       ref={anchorRef}
-       id="composition-button"
-       aria-controls={open ? 'composition-menu' : undefined}
-       aria-expanded={open ? 'true' : undefined}
-       aria-haspopup="true"
-       onClick={handleToggle}
-       sx={{
-        backgroundColor: rgb(0,0,71)
-      }}
-     >
-       Type Of Document
-     </Button>
-     <Popper
-       open={open}
-       anchorEl={anchorRef.current}
-       role={undefined}
-       placement="bottom-start"
-       transition
-       disablePortal
-     >
-       {({ TransitionProps, placement }) => (
-         <Grow
-           {...TransitionProps}
-           style={{
-             transformOrigin:
-               placement === 'bottom-start' ? 'left top' : 'left bottom',
-           }}
-         >
-           <Paper>
-             <ClickAwayListener onClickAway={handleClose}>
-               <MenuList
-                 autoFocusItem={open}
-                 id="composition-menu"
-                 aria-labelledby="composition-button"
-                 onKeyDown={handleListKeyDown}
-               >
-                 <MenuItem onClick={handleClose}>Sales</MenuItem>
-                 <MenuItem onClick={handleClose}>Paper</MenuItem>
-                 <MenuItem onClick={handleClose}>Random</MenuItem>
-               </MenuList>
-             </ClickAwayListener>
-           </Paper>
-         </Grow>
-       )}
-     </Popper>
-   </div>
- </Stack>
- 
- 
+                <div>
+                  <Button
+                    ref={wrapperRef}
+                    id="composition-button"
+                    aria-controls={open ? 'composition-menu' : undefined}
+                    aria-expanded={open ? 'true' : undefined}
+                    aria-haspopup="true"
+                    onClick={handleToggle}
+                    sx={{
+                      backgroundColor: "rgb(0, 0, 71)"
+                    }}
+                  >
+                    Type Of Document
+                  </Button>
+                  <Popper
+                    open={open}
+                    anchorEl={wrapperRef.current}
+                    role={undefined}
+                    placement="bottom-start"
+                    transition
+                    disablePortal
+                  >
+                    {({ TransitionProps, placement }) => (
+                      <Grow
+                        {...TransitionProps}
+                        style={{
+                          transformOrigin:
+                            placement === 'bottom-start' ? 'left top' : 'left bottom',
+                        }}
+                      >
+                        <Paper>
+                          <ClickAwayListener onClickAway={handleClose}>
+                            <MenuList
+                              autoFocusItem={open}
+                              id="composition-menu"
+                              aria-labelledby="composition-button"
+                              onKeyDown={handleListKeyDown}
+                            >
+                              <MenuItem onClick={() => handleCompositionSelect('Sales')}>Sales</MenuItem>
+                              <MenuItem onClick={() => handleCompositionSelect('Paper')}>Paper</MenuItem>
+                              <MenuItem onClick={() => handleCompositionSelect('Random')}>Random</MenuItem>
+                            </MenuList>
+                          </ClickAwayListener>
+                        </Paper>
+                      </Grow>
+                    )}
+                  </Popper>
+                </div>
+              </Stack>
             </div>
           ))}
         </div>
       ) : null}
+      <Button
+        variant="contained"
+        onClick={handleUpload}
+        style={{ textAlign: 'center', marginLeft: '312px', backgroundColor: "#141963" }}
+      >
+        Upload Files
+      </Button>
     </>
   );
-};
-
-DropFileInput.propTypes = {
- // onFileChange: PropTypes.func // Ensure onFileChange is a required function prop
 };
 
 export default DropFileInput;

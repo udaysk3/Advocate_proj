@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useEffect, useState } from 'react';
+import Cookies from 'universal-cookie';
 import FileOpenIcon from '@mui/icons-material/FileOpen';
 
 const columns = [
@@ -91,21 +93,30 @@ const columns = [
 
 ];
 
-const data = [
-  { no: "1", name: "Pooja Shetty", description: "Test Corp", respondant: "adv.abc", date: "3/1/202", comments: "hiring is on 3/1/2024", Status: " Inactive" },
-  { no: "2", name: "Ram Sharma", description: "Test Desc", respondant: "adv.pqr", date: "27/7/2024", comments: "hiring is on 27/7/2024", Status: "Open " },
 
-];
 
 const options = {
   filterType: 'checkbox',
 };
-
+const cookies = new Cookies();
 const Case = () => {
+  const [caseState, setCaseState] = useState([]);
+  useEffect(() => {
+    fetch('http://127.0.0.1:8000/api/v1/case', {
+      method: 'GET',
+      headers: {
+        'token': cookies.get('token'),
+      }
+    }).then((res) => {
+      return (res.json())
+    }).then((data) => {
+      console.log(data);
+      setCaseState(data);
+    });
+  }, []);
 
-  const handleNextPage = () => {
-    history.push('/fir'); // Replace '/next-page' with your desired route
-  };
+  const data = caseState;
+  
   return (
     <>
       <MUIDataTable
@@ -117,10 +128,10 @@ const Case = () => {
       <div style={{ textAlign: 'center', marginTop: '20px' }}>
 
         <Stack spacing={2} direction="row">
-          <Button variant="contained" component={Link} to="/Case" onClick={handleNextPage} style={{ backgroundColor: "#141963" }}>
+          <Button variant="contained" component={Link} to="/Case" style={{ backgroundColor: "#141963" }}>
             ALL CASES
           </Button>
-          <Button variant="contained" component={Link} to="/documents" onClick={handleNextPage} style={{ backgroundColor: "#141963" }}>
+          <Button variant="contained" component={Link} to="/documents" style={{ backgroundColor: "#141963" }}>
             ALL DOCUMENTS
           </Button>
         </Stack>

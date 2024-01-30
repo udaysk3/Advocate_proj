@@ -5,12 +5,19 @@ import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
 import Stack from '@mui/material/Stack';
 import { useLocation } from "react-router-dom";
+import Select from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import MenuItem from '@mui/material/MenuItem';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const Fir = () => {
   const location = useLocation();
-  const { formData } = location.state;
+  const { formData } = location.state || {};
   var postData = { ...formData }
-  console.log(formData)
   const initialFirData = {
     policeStation: '',
     FIRNumber: '',
@@ -33,65 +40,29 @@ const Fir = () => {
     }));
   };
 
+  const handleDateChange = (name, date) => {
+    setFirData((prevFormData) => ({
+      ...prevFormData,
+      [name]: date,
+    }));
+  };
+  
   const handleSubmit = () => {
     // Access the form data in the firData object
-      postData = { ...postData, ...firData }
+    postData = { ...postData, ...firData }
+    console.log(postData)
     
-    fetch('http://127.0.0.1:8000/api/v1/case', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiJjNTliYzUxOS05NmJkLTQ0YTQtYjJkNi03ODlhNTk4MmRhMjEiLCJlbWFpbCI6InB1dnZ1bGFzYWlnb3d0aGFtQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTcwNjUxOTY2MSwiZXhwIjoxNzA2NTIzMjYxfQ.NVdOEBFDpbG2q8pBMotYdRxFjCf7DOMLrSD8rqVj_1E'
-        },
-        body: {
-          "caseNumber": "CASE123",
-          "clientName": "Client ABC",
-          "clientContactNumber": "+1234567890",
-          "caseDescription": "Description of the case...",
-          "respondentName": "Respondent XYZ",
-          "respondentContactNumber": "+9876543210",
-          "respondentSeniorAdvocateName": "Senior Advocate PQR",
-          "respondentJuniorAdvocateOneName": "Junior Advocate JKL",
-          "respondentJuniorAdvocateTwoName": "Junior Advocate MNO",
-          "comments": [
-            "Comment 1",
-            "Comment 2"
-          ],
-          "caseStatus": "OPEN",
-          "caseType": "Civil",
-          "caseSubType": "Property Dispute",
-          "actNumber": "Act123",
-          "filingNumber": "FILING123",
-          "filingDate": "2023-01-15T00:00:00.000Z",
-          "caseStage": "PENDING",
-          "caseSeverity": "MEDIUM",
-          "firstHearingDate": "2023-02-01T10:00:00.000Z",
-          "nextHearingDate": "2023-03-01T10:00:00.000Z",
-          "policeStation": "City Police Station",
-          "FIRnumber": "FIR123",
-          "FIRdate": "2023-01-10T00:00:00.000Z",
-          "courtNumber": "Court123",
-          "courtType": "HIGHCOURT",
-          "judgePost": "District Judge",
-          "judgeName": "Judge ABC",
-          "fileList": [
-            {
-              "path": "/path/to/file1",
-              "tag": "Document",
-              "_id": "658c611f644846597987a755"
-            },
-            {
-              "path": "/path/to/file2",
-              "tag": "Evidence",
-              "_id": "658c611f644846597987a756"
-            }
-          ]
-        }
-      
-      });
-console.log(1)
-    
-    
+    fetch('/api/v1/case', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiJjNTliYzUxOS05NmJkLTQ0YTQtYjJkNi03ODlhNTk4MmRhMjEiLCJlbWFpbCI6InB1dnZ1bGFzYWlnb3d0aGFtQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTcwNjUxOTY2MSwiZXhwIjoxNzA2NTIzMjYxfQ.NVdOEBFDpbG2q8pBMotYdRxFjCf7DOMLrSD8rqVj_1E'
+      },
+      body: JSON.stringify(postData),
+
+    });
+
+
 
     // Reset the form data after submission if needed
     setFirData(initialFirData);
@@ -118,6 +89,39 @@ console.log(1)
           onChange={handleChange}
           maxRows={2}
         />
+        <FormControl sx={{ marginTop: '9px', marginLeft: '7px' }}>
+          <InputLabel id="demo-simple-select-label">Court Type</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            label="Court Type"
+            value={firData.courtType}
+            onChange={handleChange}
+            name="courtType"
+            sx={{ width: '12rem' }}
+          >
+            <MenuItem value={'DISTRICTCOURT'}>DISTRICTCOURT</MenuItem>
+            <MenuItem value={'HIGHCOURT'}>HIGHCOURT</MenuItem>
+            <MenuItem value={'SUPREMECOURT'}>SUPREMECOURT</MenuItem>
+          </Select>
+        </FormControl>
+
+        <FormControl sx={{ marginTop: '9px', marginLeft: '7px' }}>
+          <InputLabel id="demo-simple-select-label">Case Status</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            label="Case Status"
+            value={firData.caseStatus}
+            onChange={handleChange}
+            name="caseStatus"
+            sx={{ width: '12rem' }}
+          >
+            <MenuItem value={'PENDING'}>PENDING</MenuItem>
+            <MenuItem value={'OPEN'}>OPEN</MenuItem>
+            <MenuItem value={'INACTIVE'}>INACTIVE</MenuItem>
+          </Select>
+        </FormControl>
       </div>
 
       {/* FIR Number and FIR Date */}
@@ -137,6 +141,14 @@ console.log(1)
           value={firData.firDate}
           onChange={handleChange}
         />
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DemoContainer components={['DatePicker']}>
+            <DatePicker label="Select Date"
+              name="FIRdate"
+              onChange={(date) => handleDateChange('startDate', date)}
+            />
+          </DemoContainer>
+        </LocalizationProvider>
       </div>
 
       {/* Court Number and Case Number */}
@@ -158,25 +170,7 @@ console.log(1)
         />
       </div>
 
-      {/* Court Type and Court Name */}
-      <div>
-        <TextField
-          id="outlined-flexible"
-          label="Court Type"
-          name="courtType"
-          value={firData.courtType}
-          onChange={handleChange}
-          maxRows={2}
-        />
-        <TextField
-          id="outlined-flexible"
-          label="Case Status"
-          name="caseStatus"
-          value={firData.caseStatus}
-          onChange={handleChange}
-          maxRows={2}
-        />
-      </div>
+
 
       {/* Judge Post and Judge Name */}
       <div>
@@ -195,6 +189,7 @@ console.log(1)
           value={firData.judgeName}
           onChange={handleChange}
         />
+
       </div>
 
       {/* Buttons */}

@@ -8,9 +8,10 @@ import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
+// import { useEffect, useState } from 'react';
 
 
-const Form = ({ title }) => { 
+const Form = ({ title }) => {
 
   const [formData, setFormData] = React.useState({
     clientName: '',
@@ -52,7 +53,23 @@ const Form = ({ title }) => {
     }));
   };
 
+  // const cookies = new Cookies();
+  //   useEffect(() => {
+  //     fetch('http://127.0.0.1:8000/api/v1/case', {
+  //       method: 'GET',
+  //       headers: {
+  //         'token': cookies.get('token'),
+  //       }
+  //     }).then((res) => {
+  //       return (res.json())
+  //     }).then((data) => {
+  //       console.log(data);
+  //       setFormData(data);
+  //     });
+  //   }, []);
+
   return (
+
     <Box
       component="form"
       sx={{
@@ -207,6 +224,8 @@ const Form = ({ title }) => {
             />
           </FormGroup>
         </FormControl>
+
+        
         <FormControl
           component="fieldset"
           sx={{ m: 3 }}
@@ -268,6 +287,8 @@ const Form = ({ title }) => {
           maxRows={2}
         />
       </div>
+
+
 
       {/* Submit Button */}
       <div>

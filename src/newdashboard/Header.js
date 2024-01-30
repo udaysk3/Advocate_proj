@@ -13,8 +13,8 @@ import { mainListItems, secondaryListItems, thirdListItems } from './listItems';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Button from '@mui/material/Button';
 import Cookies from 'universal-cookie';
-import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open'
@@ -84,6 +84,7 @@ export default function Header() {
   return (
     <>
       <AppBar position="absolute" open={open}>
+        
         <Toolbar
           sx={{
             pr: '24px',
@@ -98,14 +99,16 @@ export default function Header() {
             sx={{
               marginRight: '36px',
               color: 'rgb(0, 0, 0)',
-              ...(open && { display: 'none' })
+              ...(open)
             }}
           >
             <MenuIcon />
           </IconButton>
-          <Typography component="h1" variant="h6" color="#000" noWrap sx={{ flexGrow: 1 }}></Typography>
+          <Typography component="h1" variant="h6" color="#000" noWrap sx={{ flexGrow: 1 }}>
+            <AccountCircleIcon  />
+          </Typography>
         </Toolbar>
-        <AccountCircleIcon />
+
       </AppBar>
       <Drawer variant="permanent" open={open}>
         <Toolbar

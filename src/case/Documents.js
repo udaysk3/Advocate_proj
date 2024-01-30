@@ -68,7 +68,7 @@ const options = {
 
 const Case = () => {
   const location = useLocation();
-  const { formData } = location.state;
+  const { formData } = location.state || {};
   return (
     <>
       <MUIDataTable
