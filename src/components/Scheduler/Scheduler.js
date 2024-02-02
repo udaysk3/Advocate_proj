@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import 'dhtmlx-scheduler';
 import 'dhtmlx-scheduler/codebase/dhtmlxscheduler_material.css';
 import Sform from './Sform';
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
 
 const scheduler = window.scheduler;
 
@@ -78,6 +80,19 @@ export default class Scheduler extends Component {
         // Here, you can handle the submission of both scheduler and form data
         console.log('Scheduler Data:', this.state.schedulerEvents[0]);
         console.log('Form Data:', formData);
+
+        fetch('http://127.0.0.1:5000/api/v1/8d3531d1-6a1c-4b00-adfd-76d5823bb6f3/event'), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'token': cookies.get('token'),
+            },
+            body: JSON.stringify({
+                "eventDate": formData.date instanceof Date ? formData.date : new Date(formData.date),
+                "eventTime": formData.time instanceof Date ? formData.time : new Date(formData.time),
+                "eventNotes": formData.note
+            })
+        }
     };
 
     render() {

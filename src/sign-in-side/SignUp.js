@@ -15,6 +15,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Cookies from 'universal-cookie';
+import { useNavigate } from "react-router-dom";
+
 
 
 const cookies = new Cookies();
@@ -23,6 +25,9 @@ const cookies = new Cookies();
 const defaultTheme = createTheme();
 
 export default function SignUp() {
+
+  const navigate = useNavigate();
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -51,12 +56,11 @@ export default function SignUp() {
     }).then((res) => {
       return(res.json())
     }).then((data) => {
-      console.log(data)
       cookies.set('token', data.data);
-      console.log(cookies.get('token')); 
+      cookies.set('role', data.role);
     });
-    window.location.reload();
-    window.location.href = '/';
+    navigate("/");
+
   };
   const [role, setRole] = React.useState('');
 
@@ -64,6 +68,11 @@ export default function SignUp() {
   const handleChange = (event) => {
     setRole(event.target.value);
   };
+
+
+  const handleSignin = () => {
+    navigate("/signin");
+  }
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -245,9 +254,10 @@ export default function SignUp() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link to="/signin" variant="body2">
+                <Link to="/signin" variant="body2" onClick={handleSignin}>
                   {'Already have an account? Sign in'}
                 </Link>
+                
               </Grid>
             </Grid>
           </Box>

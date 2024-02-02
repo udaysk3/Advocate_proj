@@ -1,19 +1,27 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { Link } from 'react-router-dom';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
-// import { useEffect, useState } from 'react';
+import Cookies from 'universal-cookie';
+import { useLocation } from 'react-router-dom';
+// import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+// import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+// import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { Link } from 'react-router-dom';
 
+const cookies = new Cookies();
 
 const Form = ({ title }) => {
+  const location = useLocation();
+  const { _id } = location.state;
 
-  const [formData, setFormData] = React.useState({
+  const [formData, setFormData] = useState({
     clientName: '',
     caseDescription: '',
     respondentName: '',
@@ -22,27 +30,56 @@ const Form = ({ title }) => {
     respondentJuniorAdvocateTwoName: '',
     comments: '',
     caseType: '',
-    caseSubtype: '',
+    caseSubType: '',
     actNumber: '',
     filingNumber: '',
     filingDate: '',
     caseStage: {
-      closed: true,
-      fir: false,
-      pending: false,
+      CLOSED: true,
+      FIR: false,
+      PENDING: false,
     },
     caseSeverity: {
-      low: true,
-      high: false,
-      medium: false,
+      LOW: true,
+      HIGH: false,
+      MEDIUM: false,
     },
     firstHearingDate: '',
     nextHearingDate: '',
-    // isPetitioner: false,y
     clientContactNumber: '',
     respondentContactNumber: '',
     fileList: [],
+    policeStation: '',
+    FIRnumber: '',
+    FIRDate: '',
+    courtNumber: '',
+    caseNumber: '',
+    courtType: '',
+    judgePost: '',
+    judgeName: '',
+    caseStatus: '',
   });
+
+  useEffect(() => {
+    fetch(`http://127.0.0.1:8000/api/v1/case/${_id}`, {
+      method: 'GET',
+      headers: {
+        'token': cookies.get('token'),
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+
+        // Prefill the form data with fetched data
+        setFormData({
+          ...formData,
+          ...data,
+          caseStage: { ...formData.caseStage, ...data.caseStage },
+          caseSeverity: { ...formData.caseSeverity, ...data.caseSeverity },
+        });
+      });
+  }, []);
 
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
@@ -53,23 +90,20 @@ const Form = ({ title }) => {
     }));
   };
 
-  // const cookies = new Cookies();
-  //   useEffect(() => {
-  //     fetch('http://127.0.0.1:8000/api/v1/case', {
-  //       method: 'GET',
-  //       headers: {
-  //         'token': cookies.get('token'),
-  //       }
-  //     }).then((res) => {
-  //       return (res.json())
-  //     }).then((data) => {
-  //       console.log(data);
-  //       setFormData(data);
-  //     });
-  //   }, []);
+  // const handleDateChange = (name, date) => {
+  //   setFormData((prevFormData) => ({
+  //     ...prevFormData,
+  //     [name]: date,
+  //   }));
+  // };
+
+  const handleSubmit = () => {
+    // Handle form submission if needed
+    // You can access the form data from the formData state
+    console.log(formData);
+  };
 
   return (
-
     <Box
       component="form"
       sx={{
@@ -84,39 +118,27 @@ const Form = ({ title }) => {
         Add Client & Case Details
       </h1>
 
-      {/* Client Details Section */}
       <div>
         <TextField
           id="clientName"
           label="Client Full Name"
-          value={formData.clientName}
+          value={formData.clientName || ''}
           onChange={handleChange}
           name="clientName"
           maxRows={2}
         />
-        {/* <FormControlLabel
-          control={<Checkbox checked={formData.isPetitioner} onChange={handleChange} name="isPetitioner" />}
-          label="Petitioner"
-        />
-        <FormControlLabel
-          control={<Checkbox checked={formData.isRespondent} onChange={handleChange} name="isRespondent" />}
-          label="Respondent"
-        /> */}
-
-
-
 
         <TextField
           id="clientContactNumber"
           label="Client Contact Number"
-          value={formData.clientContactNumber}
+          value={formData.clientContactNumber || ''}
           onChange={handleChange}
           name="clientContactNumber"
         />
         <TextField
           id="respondentName"
           label="Respondent Full Name"
-          value={formData.respondentName}
+          value={formData.respondentName || ''}
           onChange={handleChange}
           name="respondentName"
         />
@@ -125,23 +147,22 @@ const Form = ({ title }) => {
         <TextField
           id="respondentContactNumber"
           label="Respondent Contact Number"
-          value={formData.respondentContactNumber}
+          value={formData.respondentContactNumber || ''}
           onChange={handleChange}
           name="respondentContactNumber"
         />
 
-        {/* Advocate Details Section */}
         <TextField
           id="respondentSeniorAdvocateName"
           label="Respondent Senior Advocate Name"
-          value={formData.respondentSeniorAdvocateName}
+          value={formData.respondentSeniorAdvocateName || ''}
           onChange={handleChange}
           name="respondentSeniorAdvocateName"
         />
         <TextField
           id="respondentJuniorAdvocateOneName"
           label="Respondent Junior Advocate 1"
-          value={formData.respondentJuniorAdvocateOneName}
+          value={formData.respondentJuniorAdvocateOneName || ''}
           onChange={handleChange}
           name="respondentJuniorAdvocateOneName"
         />
@@ -150,36 +171,33 @@ const Form = ({ title }) => {
         <TextField
           id="respondentJuniorAdvocateTwoName"
           label="Respondent Junior Advocate 2"
-          value={formData.respondentJuniorAdvocateTwoName}
+          value={formData.respondentJuniorAdvocateTwoName || ''}
           onChange={handleChange}
           name="respondentJuniorAdvocateTwoName"
         />
 
-        {/* Case Details Section */}
-
         <TextField
           id="caseType"
           label="Case Type"
-          value={formData.caseType}
+          value={formData.caseType || ''}
           onChange={handleChange}
           name="caseType"
         />
         <TextField
-          id="caseSubtype"
+          id="caseSubType"
           label="Case Subtype"
-          value={formData.caseSubtype}
+          value={formData.caseSubType || ''}
           onChange={handleChange}
-          name="caseSubtype"
+          name="caseSubType"
           maxRows={2}
         />
       </div>
 
-      {/* Additional Case Information Section */}
       <div>
         <TextField
           id="actNumber"
           label="Act Number"
-          value={formData.actNumber}
+          value={formData.actNumber || ''}
           onChange={handleChange}
           name="actNumber"
           maxRows={2}
@@ -187,21 +205,22 @@ const Form = ({ title }) => {
         <TextField
           id="filingNumber"
           label="Filing Number"
-          value={formData.filingNumber}
+          value={formData.filingNumber || ''}
           onChange={handleChange}
           name="filingNumber"
         />
-        <TextField
-          id="filingDate"
-          label="Filing Date"
-          value={formData.filingDate}
-          onChange={handleChange}
-          name="filingDate"
-          maxRows={2}
-        />
-
+        {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DemoContainer components={['DatePicker']}>
+            <DatePicker
+              label="Filing Date"
+              name="filingDate"
+              value={formData.filingDate}
+              onChange={(date) => handleDateChange('filingDate', date)}
+            />
+          </DemoContainer>
+        </LocalizationProvider> */}
       </div>
-      {/* Stage and Severity Section */}
+
       <Box sx={{ display: 'flex' }}>
         <FormControl
           component="fieldset"
@@ -211,21 +230,19 @@ const Form = ({ title }) => {
           <FormGroup>
             <FormLabel component="legend">Stage Of the case</FormLabel>
             <FormControlLabel
-              control={<Checkbox checked={formData.caseStage.closed} onChange={handleChange} name="caseStage.closed" />}
+              control={<Checkbox checked={formData.caseStage.CLOSED} onChange={handleChange} name="caseStage.CLOSED" />}
               label="Closed"
             />
             <FormControlLabel
-              control={<Checkbox checked={formData.caseStage.fir} onChange={handleChange} name="caseStage.fir" />}
+              control={<Checkbox checked={formData.caseStage.FIR} onChange={handleChange} name="caseStage.FIR" />}
               label="FIR"
             />
             <FormControlLabel
-              control={<Checkbox checked={formData.caseStage.pending} onChange={handleChange} name="caseStage.pending" />}
+              control={<Checkbox checked={formData.caseStage.PENDING} onChange={handleChange} name="caseStage.PENDING" />}
               label="Pending"
             />
           </FormGroup>
         </FormControl>
-
-        
         <FormControl
           component="fieldset"
           sx={{ m: 3 }}
@@ -234,46 +251,49 @@ const Form = ({ title }) => {
           <FormGroup>
             <FormLabel component="legend">Severity Of the case</FormLabel>
             <FormControlLabel
-              control={<Checkbox checked={formData.caseSeverity.low} onChange={handleChange} name="caseSeverity.low" />}
+              control={<Checkbox checked={formData.caseSeverity.LOW} onChange={handleChange} name="caseSeverity.LOW" />}
               label="Low"
             />
             <FormControlLabel
-              control={<Checkbox checked={formData.caseSeverity.high} onChange={handleChange} name="caseSeverity.high" />}
+              control={<Checkbox checked={formData.caseSeverity.HIGH} onChange={handleChange} name="caseSeverity.HIGH" />}
               label="High"
             />
             <FormControlLabel
-              control={<Checkbox checked={formData.caseSeverity.medium} onChange={handleChange} name="caseSeverity.medium" />}
+              control={<Checkbox checked={formData.caseSeverity.MEDIUM} onChange={handleChange} name="caseSeverity.MEDIUM" />}
               label="Medium"
             />
           </FormGroup>
         </FormControl>
       </Box>
 
-      {/* Hearing Dates Section */}
       <div>
-        <TextField
-          id="firstHearingDate"
-          label="First Hearing Date"
-          value={formData.firstHearingDate}
-          onChange={handleChange}
-          name="firstHearingDate"
-          maxRows={2}
-        />
-        <TextField
-          id="nextHearingDate"
-          label="Next Hearing Date"
-          value={formData.nextHearingDate}
-          onChange={handleChange}
-          name="nextHearingDate"
-        />
+        {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DemoContainer components={['DatePicker']}>
+            <DatePicker
+              label="First Hearing Date"
+              name="firstHearingDate"
+              value={formData.firstHearingDate}
+              onChange={(date) => handleDateChange('firstHearingDate', date)}
+            />
+          </DemoContainer>
+        </LocalizationProvider>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DemoContainer components={['DatePicker']}>
+            <DatePicker
+              label="Next Hearing Date"
+              name="nextHearingDate"
+              value={formData.nextHearingDate}
+              onChange={(date) => handleDateChange('nextHearingDate', date)}
+            />
+          </DemoContainer>
+        </LocalizationProvider> */}
       </div>
 
-      {/* Comments and Case Description Section */}
       <div>
         <TextField
           id="comments"
           label="Add comments"
-          value={formData.comments}
+          value={formData.comments || ''}
           onChange={handleChange}
           name="comments"
           maxRows={2}
@@ -281,38 +301,33 @@ const Form = ({ title }) => {
         <TextField
           id="caseDescription"
           label="Add Case Description"
-          value={formData.caseDescription}
+          value={formData.caseDescription || ''}
           onChange={handleChange}
           name="caseDescription"
           maxRows={2}
         />
       </div>
 
-
-
-      {/* Submit Button */}
       <div>
         <Button
           variant="contained"
           component={Link}
-          to="/ufir" state={{
+          to="/ufir"
+          state={{
             formData: {
               ...formData,
-              caseStage: Object.keys(formData.caseStage)
-                .filter((key) => formData.caseStage[key])[0],
-              caseSeverity: Object.keys(formData.caseSeverity)
-                .filter((key) => formData.caseSeverity[key])[0]
-            }
+              caseStage: Object.keys(formData.caseStage).find((key) => formData.caseStage[key]),
+              caseSeverity: Object.keys(formData.caseSeverity).find((key) => formData.caseSeverity[key]),
+            },
           }}
           style={{ backgroundColor: '#141963', textAlign: 'center', marginTop: '24px' }}
+          onClick={handleSubmit}
         >
           Next Page
         </Button>
       </div>
     </Box>
   );
-
 };
 
 export default Form;
-

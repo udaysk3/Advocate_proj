@@ -15,10 +15,7 @@ import AppWidgetSummary from '../app-widget-summary';
 import AppTrafficBySite from '../app-traffic-by-site';
 import AppCurrentSubject from '../app-current-subject';
 import AppConversionRates from '../app-conversion-rates';
-import glassBuyIcon from '../../assets/icons/glass/ic_glass_buy.png';
-import glassUsersIcon from '../../assets/icons/glass/ic_glass_users.png';
-import glassItemsOrder from '../../assets/icons/glass/ic_glass_bag.png';
-import glassMessage from '../../assets/icons/glass/ic_glass_message.png';
+import images from '../../assets/icons/glass/images.png'
 
 // ----------------------------------------------------------------------
 
@@ -32,57 +29,56 @@ export default function AppView() {
       <Grid container spacing={3}>
         <Grid xs={12} sm={6} md={3}>
           <AppWidgetSummary
-            title="Weekly Sales"
+            title="Total Sales"
             total={714000}
             color="success"
-            icon={<img alt="icon" src={glassBuyIcon} />}
+            icon={<img alt="icon" width='60px' src={images} />}
           />
         </Grid>
 
         <Grid xs={12} sm={6} md={3}>
           <AppWidgetSummary
-            title="New Users"
+            title="Active Cases"
             total={1352831}
             color="info"
-            icon={<img alt="icon" src={glassUsersIcon} />}
+            icon={<img alt="icon" width='60px' src={images} />}
           />
         </Grid>
 
         <Grid xs={12} sm={6} md={3}>
           <AppWidgetSummary
-            title="Item Orders"
+            title="Closed Cases"
             total={1723315}
             color="warning"
-            icon={<img alt="icon" src={glassItemsOrder} />}
+            icon={<img alt="icon" width='60px' src={images} />}
           />
         </Grid>
 
         <Grid xs={12} sm={6} md={3}>
           <AppWidgetSummary
-            title="Bug Reports"
+            title="Successful Cases"
             total={234}
             color="error"
-            icon={<img alt="icon" src={glassMessage} />}
+            icon={<img alt="icon" width='60px' src={images} />}
           />
         </Grid>
 
         <Grid xs={12} md={6} lg={8}>
           <AppWebsiteVisits
-            title="Website Visits"
-            subheader="(+43%) than last year"
             chart={{
               labels: [
-                '01/01/2003',
-                '02/01/2003',
-                '03/01/2003',
-                '04/01/2003',
-                '05/01/2003',
-                '06/01/2003',
-                '07/01/2003',
-                '08/01/2003',
-                '09/01/2003',
-                '10/01/2003',
-                '11/01/2003',
+                'Jan',
+                'Feb',
+                'March',
+                'April',
+                'May',
+                'June',
+                'July',
+                'Aug',
+                'Sep',
+                'Oct',
+                'Nov',
+                'Dec',
               ],
               series: [
                 {
@@ -110,7 +106,7 @@ export default function AppView() {
 
         <Grid xs={12} md={6} lg={4}>
           <AppCurrentVisits
-            title="Current Visits"
+            title="Case Type"
             chart={{
               series: [
                 { label: 'America', value: 4344 },
@@ -124,8 +120,7 @@ export default function AppView() {
 
         <Grid xs={12} md={6} lg={8}>
           <AppConversionRates
-            title="Conversion Rates"
-            subheader="(+43%) than last year"
+            title="Case Progress"
             chart={{
               series: [
                 { label: 'Italy', value: 400 },
@@ -145,7 +140,7 @@ export default function AppView() {
 
         <Grid xs={12} md={6} lg={4}>
           <AppCurrentSubject
-            title="Current Subject"
+            title="Case Progress"
             chart={{
               categories: ['English', 'History', 'Physics', 'Geography', 'Chinese', 'Math'],
               series: [

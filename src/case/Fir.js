@@ -12,7 +12,11 @@ import MenuItem from '@mui/material/MenuItem';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import Cookies from 'universal-cookie';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+
+const cookies = new Cookies();
+
 
 const Fir = () => {
   const location = useLocation();
@@ -20,7 +24,7 @@ const Fir = () => {
   var postData = { ...formData }
   const initialFirData = {
     policeStation: '',
-    FIRNumber: '',
+    FIRnumber: '',
     FIRDate: '',
     courtNumber: '',
     caseNumber: '',
@@ -41,9 +45,10 @@ const Fir = () => {
   };
 
   const handleDateChange = (name, date) => {
+    const selectedDate = date instanceof Date ? date : new Date(date);
     setFirData((prevFormData) => ({
       ...prevFormData,
-      [name]: date,
+      [name]: selectedDate,
     }));
   };
   
@@ -52,11 +57,11 @@ const Fir = () => {
     postData = { ...postData, ...firData }
     console.log(postData)
     
-    fetch('/api/v1/case', {
+    fetch('http://127.0.0.1:8000/api/v1/case', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiJjNTliYzUxOS05NmJkLTQ0YTQtYjJkNi03ODlhNTk4MmRhMjEiLCJlbWFpbCI6InB1dnZ1bGFzYWlnb3d0aGFtQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTcwNjUxOTY2MSwiZXhwIjoxNzA2NTIzMjYxfQ.NVdOEBFDpbG2q8pBMotYdRxFjCf7DOMLrSD8rqVj_1E'
+        'token': cookies.get('token'),
       },
       body: JSON.stringify(postData),
 
@@ -129,23 +134,16 @@ const Fir = () => {
         <TextField
           id="outlined-flexible"
           label="FIR Number"
-          name="firNumber"
-          value={firData.firNumber}
+          name="FIRnumber"
+          value={firData.FIRnumber}
           onChange={handleChange}
           maxRows={2}
         />
-        <TextField
-          id="outlined-textarea"
-          label="FIR Date"
-          name="firDate"
-          value={firData.firDate}
-          onChange={handleChange}
-        />
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DemoContainer components={['DatePicker']}>
-            <DatePicker label="Select Date"
-              name="FIRdate"
-              onChange={(date) => handleDateChange('startDate', date)}
+            <DatePicker label="FIR Date"
+              name="FIRDate"
+              onChange={(date) => handleDateChange('FIRDate', date)}
             />
           </DemoContainer>
         </LocalizationProvider>
@@ -199,6 +197,8 @@ const Fir = () => {
             variant="contained"
             style={{ backgroundColor: "#141963" }}
             onClick={handleSubmit}
+            component={Link}
+            to="/case"
           >
             ADD DATA
           </Button>

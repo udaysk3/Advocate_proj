@@ -12,8 +12,12 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
+import Cookies from 'universal-cookie';
+import { useNavigate } from "react-router-dom";
 
 const Tform = ({ title }) => {
+  const navigate = useNavigate();
+  const cookies = new Cookies();
   const [taskFormData, setTaskFormData] = React.useState({
     subject: '',
     taskId: '',
@@ -21,11 +25,11 @@ const Tform = ({ title }) => {
     deadline: null,
     status: '',
     priority: '',
-    assignTo: '',
+    assignedTo: '',
     relatedTo: '',
     casePersonName: '',
     caseNumber: '',
-    description: '',
+    taskDescription: '',
   });
 
   const handleChange = (event) => {
@@ -38,15 +42,28 @@ const Tform = ({ title }) => {
   };
 
   const handleDateChange = (name, date) => {
+    const selectedDate = date instanceof Date ? date : new Date(date);
     setTaskFormData((prevFormData) => ({
       ...prevFormData,
-      [name]: date,
+      [name]: selectedDate,
     }));
   };
 
   const handleSubmit = () => {
-    console.log('Task Form Data:', taskFormData);
-    // You can perform additional actions like sending data to a server here
+    fetch('http://127.0.0.1:8000/api/v1/task', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'token': cookies.get('token'),
+      },
+      body: JSON.stringify(taskFormData),
+
+    }).then((res) => {
+      return (res.json())
+    }).then((data) => {
+      navigate('/Team',{state:{tdata: data}})
+    });
+
   };
 
   return (
@@ -81,6 +98,7 @@ const Tform = ({ title }) => {
           <DemoContainer components={['DatePicker']}>
             <DatePicker
               name="startDate"
+              label="Start Date"
               onChange={(date) => handleDateChange('startDate', date)}
             />
           </DemoContainer>
@@ -88,9 +106,10 @@ const Tform = ({ title }) => {
 
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={['DatePicker']}>
-              <DatePicker
+            <DatePicker
+              label="End Date"
               name="deadline"
-                onChange={(date) => handleDateChange('endDate', date)}
+              onChange={(date) => handleDateChange('deadline', date)}
               />
             </DemoContainer>
           </LocalizationProvider>
@@ -130,9 +149,9 @@ const Tform = ({ title }) => {
       </div>
       <div>
         <TextField
-          id="outlined-assignTo"
+          id="outlined-assignedTo"
           label="Assign To"
-          name="assignTo"
+          name="assignedTo"
           onChange={handleChange}
           multiline
         />
@@ -162,9 +181,9 @@ const Tform = ({ title }) => {
       </div>
       <div>
         <TextField
-          id="outlined-description"
-          label="Description"
-          name="description"
+          id="outlined-taskDescription"
+          label="taskDescription"
+          name="taskDescription"
           onChange={handleChange}
           multiline
         />

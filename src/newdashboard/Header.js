@@ -1,20 +1,27 @@
 import React from 'react';
 import MuiAppBar from '@mui/material/AppBar';
-import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import MuiDrawer from '@mui/material/Drawer';
-import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
+import Avatar from '@mui/material/Avatar';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { mainListItems, secondaryListItems, thirdListItems } from './listItems';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
 import Cookies from 'universal-cookie';
 import { Link } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from 'react';
+import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Collapse from '@mui/material/Collapse';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open'
@@ -63,9 +70,18 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 const drawerWidth = 260;
 
 export default function Header() {
+  const navigate = useNavigate();
+
+
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
+  };
+
+  const [bopen, setbOpen] = React.useState(false);
+
+  const handleClick = () => {
+    setbOpen(!bopen);
   };
 
   const cookies = new Cookies();
@@ -84,7 +100,7 @@ export default function Header() {
   return (
     <>
       <AppBar position="absolute" open={open}>
-        
+
         <Toolbar
           sx={{
             pr: '24px',
@@ -104,12 +120,48 @@ export default function Header() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography component="h1" variant="h6" color="#000" noWrap sx={{ flexGrow: 1 }}>
-            <AccountCircleIcon  />
-          </Typography>
+          <Grid item container alignItems="flex-end" direction="column">
+            {signup !== 'Logout' ? <Link to={link}>
+              <Button
+                role="link"
+                variant="contained"
+              >
+                Signup
+
+              </Button>
+            </Link> : <List
+              sx={{ width: '100%', maxWidth: 180, bgcolor: 'white', color: 'black' }}
+              component="nav"
+            >
+              <ListItemButton onClick={handleClick}>
+                <ListItemIcon>
+                  <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                </ListItemIcon>
+                <ListItemText primary="Inbox" />
+                {bopen ? <ExpandLess /> : <ExpandMore />}
+              </ListItemButton>
+              <Collapse in={bopen} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  <ListItemButton sx={{ pl: 4 }} onClick={() => {
+
+                    cookies.remove('token');
+                    navigate("/");
+                  }
+                  }>
+                    <ListItemText primary="Logout" />
+                  </ListItemButton>
+                </List>
+              </Collapse>
+            </List>}
+
+
+
+
+
+          </Grid>
         </Toolbar>
 
-      </AppBar>
+      </AppBar >
       <Drawer variant="permanent" open={open}>
         <Toolbar
           sx={{
@@ -127,21 +179,7 @@ export default function Header() {
         <Divider />
         <List component="nav">
 
-          <Link to={link}>
-            <Button
-              role="link"
-              variant="contained"
-              onClick={() => {
-                if (signup === 'Logout') {
-                  cookies.remove('token');
-                  window.location.reload();
-                }
-              }
-              }
-            >
-              {signup}
-            </Button>
-          </Link>
+
 
 
           {mainListItems}

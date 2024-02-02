@@ -66,12 +66,10 @@ export default function SignIn() {
     }).then((res) => {
       return (res.json())
     }).then((data) => {
-      console.log(data)
-      cookies.set('token', data.data);
-      console.log(cookies.get('token'));
-
+      cookies.set('token', data.data, { expires: new Date(Date.now() + 2592000) });
     });
-    navigate("/about");
+
+    navigate("/");
 
   };
 

@@ -4,20 +4,26 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
 import Stack from '@mui/material/Stack';
-import { useLocation } from "react-router-dom";
+import { useLocation } from 'react-router-dom';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+// import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+// import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+// import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import Cookies from 'universal-cookie';
 
-const Fir = ( ) => { 
- const location = useLocation();
+const cookies = new Cookies();
+
+
+const Fir = () => {
+  const location = useLocation();
   const { formData } = location.state;
-  var postData = { ...formData }
-  console.log(formData)
   const initialFirData = {
     policeStation: '',
-    FIRNumber: '',
+    FIRnumber: '',
     FIRDate: '',
     courtNumber: '',
     caseNumber: '',
@@ -27,7 +33,7 @@ const Fir = ( ) => {
     caseStatus: '',
   };
 
-  const [firData, setFirData] = React.useState(initialFirData);
+  const [firData, setFirData] = React.useState({ ...initialFirData, ...formData });
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -37,65 +43,26 @@ const Fir = ( ) => {
     }));
   };
 
+  // const handleDateChange = (name, date) => {
+  //   const selectedDate = date instanceof Date ? date : new Date(date);
+  //   setFirData((prevFormData) => ({
+  //     ...prevFormData,
+  //     [name]: selectedDate,
+  //   }));
+  // };
+
   const handleSubmit = () => {
     // Access the form data in the firData object
-      postData = { ...postData, ...firData }
-    
-    fetch('http://127.0.0.1:8000/api/v1/case', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiJjNTliYzUxOS05NmJkLTQ0YTQtYjJkNi03ODlhNTk4MmRhMjEiLCJlbWFpbCI6InB1dnZ1bGFzYWlnb3d0aGFtQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTcwNjUxOTY2MSwiZXhwIjoxNzA2NTIzMjYxfQ.NVdOEBFDpbG2q8pBMotYdRxFjCf7DOMLrSD8rqVj_1E'
-        },
-        body: {
-          "caseNumber": "CASE123",
-          "clientName": "Client ABC",
-          "clientContactNumber": "+1234567890",
-          "caseDescription": "Description of the case...",
-          "respondentName": "Respondent XYZ",
-          "respondentContactNumber": "+9876543210",
-          "respondentSeniorAdvocateName": "Senior Advocate PQR",
-          "respondentJuniorAdvocateOneName": "Junior Advocate JKL",
-          "respondentJuniorAdvocateTwoName": "Junior Advocate MNO",
-          "comments": [
-            "Comment 1",
-            "Comment 2"
-          ],
-          "caseStatus": "OPEN",
-          "caseType": "Civil",
-          "caseSubType": "Property Dispute",
-          "actNumber": "Act123",
-          "filingNumber": "FILING123",
-          "filingDate": "2023-01-15T00:00:00.000Z",
-          "caseStage": "PENDING",
-          "caseSeverity": "MEDIUM",
-          "firstHearingDate": "2023-02-01T10:00:00.000Z",
-          "nextHearingDate": "2023-03-01T10:00:00.000Z",
-          "policeStation": "City Police Station",
-          "FIRnumber": "FIR123",
-          "FIRdate": "2023-01-10T00:00:00.000Z",
-          "courtNumber": "Court123",
-          "courtType": "HIGHCOURT",
-          "judgePost": "District Judge",
-          "judgeName": "Judge ABC",
-          "fileList": [
-            {
-              "path": "/path/to/file1",
-              "tag": "Document",
-              "_id": "658c611f644846597987a755"
-            },
-            {
-              "path": "/path/to/file2",
-              "tag": "Evidence",
-              "_id": "658c611f644846597987a756"
-            }
-          ]
-        }
-      
-      });
-console.log(1)
-    
-    
+    const postData = { ...formData, ...firData };
+
+    fetch(`http://127.0.0.1:8000/api/v1/case/${formData._id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'token': cookies.get('token'),
+      },
+      body: JSON.stringify(postData),
+    });
 
     // Reset the form data after submission if needed
     setFirData(initialFirData);
@@ -162,18 +129,20 @@ console.log(1)
         <TextField
           id="outlined-flexible"
           label="FIR Number"
-          name="firNumber"
-          value={firData.firNumber}
+          name="FIRNumber"
+          value={firData.FIRnumber}
           onChange={handleChange}
           maxRows={2}
         />
-        <TextField
-          id="outlined-textarea"
-          label="FIR Date"
-          name="firDate"
-          value={firData.firDate}
-          onChange={handleChange}
-        />
+        {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DemoContainer components={['DatePicker']}>
+            <DatePicker label="FIR Date"
+              name="FIRDate"
+              value={firData.FIRDate}
+              onChange={(date) => handleDateChange('FIRDate', date)}
+            />
+          </DemoContainer>
+        </LocalizationProvider> */}
       </div>
 
       {/* Court Number and Case Number */}
@@ -195,8 +164,6 @@ console.log(1)
         />
       </div>
 
-
-
       {/* Judge Post and Judge Name */}
       <div>
         <TextField
@@ -214,7 +181,6 @@ console.log(1)
           value={firData.judgeName}
           onChange={handleChange}
         />
-
       </div>
 
       {/* Buttons */}
@@ -222,18 +188,20 @@ console.log(1)
         <Stack spacing={2} direction="row">
           <Button
             variant="contained"
-            style={{ backgroundColor: "#141963" }}
+            component={Link}
+            to="/case"
+            style={{ backgroundColor: '#141963' }}
             onClick={handleSubmit}
           >
-            ADD DATA
+            Update DATA
           </Button>
           <Button
             variant="contained"
-            style={{ backgroundColor: "#141963" }}
+            style={{ backgroundColor: '#141963' }}
             component={Link}
             to="/documents"
             state={{
-              formData: { ...postData }
+              formData: { ...formData },
             }}
           >
             UPLOAD DOCUMENT

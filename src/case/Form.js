@@ -8,6 +8,10 @@ import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const Form = ({ title }) => {
   const [formData, setFormData] = React.useState({
@@ -19,25 +23,34 @@ const Form = ({ title }) => {
     respondentJuniorAdvocateTwoName: '',
     comments: '',
     caseType: '',
-    caseSubtype: '',
+    caseSubType: '',
     actNumber: '',
     filingNumber: '',
     filingDate: '',
     caseStage: {
-      closed: true,
-      fir: false,
-      pending: false,
+      CLOSED: true,
+      FIR: false,
+      PENDING: false,
     },
     caseSeverity: {
-      low: true,
-      high: false,
-      medium: false,
+      LOW: true,
+      HIGH: false,
+      MEDIUM: false,
     },
     firstHearingDate: '',
     nextHearingDate: '',
     clientContactNumber: '',
     respondentContactNumber: '',
     fileList: [],
+    policeStation: '',
+    FIRnumber: '',
+    FIRDate: '',
+    courtNumber: '',
+    caseNumber: '',
+    courtType: '',
+    judgePost: '',
+    judgeName: '',
+    caseStatus: '',
   });
 
   const handleChange = (event) => {
@@ -46,6 +59,14 @@ const Form = ({ title }) => {
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
+
+  const handleDateChange = (name, date) => {
+    const selectedDate = date instanceof Date ? date : new Date(date);
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: selectedDate,
     }));
   };
 
@@ -145,11 +166,11 @@ const Form = ({ title }) => {
           name="caseType"
         />
         <TextField
-          id="caseSubtype"
+          id="caseSubType"
           label="Case Subtype"
-          value={formData.caseSubtype}
+          value={formData.caseSubType}
           onChange={handleChange}
-          name="caseSubtype"
+          name="caseSubType"
           maxRows={2}
           />
       </div>
@@ -171,14 +192,14 @@ const Form = ({ title }) => {
           onChange={handleChange}
           name="filingNumber"
         />
-        <TextField
-          id="filingDate"
-          label="Filing Date"
-          value={formData.filingDate}
-          onChange={handleChange}
-          name="filingDate"
-          maxRows={2}
-          />
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DemoContainer components={['DatePicker']}>
+            <DatePicker label="Filing Date"
+              name="filingDate"
+              onChange={(date) => handleDateChange('filingDate', date)}
+            />
+          </DemoContainer>
+        </LocalizationProvider>
 
           </div>
       {/* Stage and Severity Section */}
@@ -191,15 +212,15 @@ const Form = ({ title }) => {
           <FormGroup>
             <FormLabel component="legend">Stage Of the case</FormLabel>
             <FormControlLabel
-              control={<Checkbox checked={formData.caseStage.closed} onChange={handleChange} name="caseStage.closed" />}
+              control={<Checkbox checked={formData.caseStage.CLOSED} onChange={handleChange} name="caseStage.CLOSED" />}
               label="Closed"
             />
             <FormControlLabel
-              control={<Checkbox checked={formData.caseStage.fir} onChange={handleChange} name="caseStage.fir" />}
+              control={<Checkbox checked={formData.caseStage.FIR} onChange={handleChange} name="caseStage.FIR" />}
               label="FIR"
             />
             <FormControlLabel
-              control={<Checkbox checked={formData.caseStage.pending} onChange={handleChange} name="caseStage.pending" />}
+              control={<Checkbox checked={formData.caseStage.PENDING} onChange={handleChange} name="caseStage.PENDING" />}
               label="Pending"
             />
           </FormGroup>
@@ -212,15 +233,15 @@ const Form = ({ title }) => {
           <FormGroup>
             <FormLabel component="legend">Severity Of the case</FormLabel>
             <FormControlLabel
-              control={<Checkbox checked={formData.caseSeverity.low} onChange={handleChange} name="caseSeverity.low" />}
+              control={<Checkbox checked={formData.caseSeverity.LOW} onChange={handleChange} name="caseSeverity.LOW" />}
               label="Low"
             />
             <FormControlLabel
-              control={<Checkbox checked={formData.caseSeverity.high} onChange={handleChange} name="caseSeverity.high" />}
+              control={<Checkbox checked={formData.caseSeverity.HIGH} onChange={handleChange} name="caseSeverity.HIGH" />}
               label="High"
             />
             <FormControlLabel
-              control={<Checkbox checked={formData.caseSeverity.medium} onChange={handleChange} name="caseSeverity.medium" />}
+              control={<Checkbox checked={formData.caseSeverity.MEDIUM} onChange={handleChange} name="caseSeverity.MEDIUM" />}
               label="Medium"
             />
           </FormGroup>
@@ -229,21 +250,22 @@ const Form = ({ title }) => {
 
       {/* Hearing Dates Section */}
       <div>
-        <TextField
-          id="firstHearingDate"
-          label="First Hearing Date"
-          value={formData.firstHearingDate}
-          onChange={handleChange}
-          name="firstHearingDate"
-          maxRows={2}
-        />
-        <TextField
-          id="nextHearingDate"
-          label="Next Hearing Date"
-          value={formData.nextHearingDate}
-          onChange={handleChange}
-          name="nextHearingDate"
-          />
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DemoContainer components={['DatePicker']}>
+            <DatePicker label="First Hearing Date"
+              name="firstHearingDate"
+              onChange={(date) => handleDateChange('firstHearingDate', date)}
+            />
+          </DemoContainer>
+        </LocalizationProvider>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DemoContainer components={['DatePicker']}>
+            <DatePicker label="Next Hearing Date"
+              name="nextHearingDate"
+              onChange={(date) => handleDateChange('nextHearingDate', date)}
+            />
+          </DemoContainer>
+        </LocalizationProvider>
       </div>
 
       {/* Comments and Case Description Section */}

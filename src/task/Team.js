@@ -9,62 +9,46 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Box from '@mui/material/Box';
+import { useLocation } from "react-router-dom";
 
 
 const Team = ({ title }) => {
+  const location = useLocation();
+  const { tdata } = location.state;
+
+  console.log(tdata)
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    console.log({
-      "name": data.get('firstName') + data.get("lastName"),
-      "email": data.get("email"),
-      "password": data.get("password"),
-      "phone": {
-        "country_isd_code": data.get("country_isd_code"),
-        "number": data.get("number")
+    fetch(`http://127.0.0.1:5000/api/v1/${tdata._id}/teammember`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
-      "address": {
-        "street": data.get("street"),
-        "city": data.get("city"),
-        "state": data.get("state"),
-        "postalCode": data.get("postalCode"),
-        "country": data.get("country")
-      },
-      "role": role
-    })
-
-    // fetch('http://127.0.0.1:8000/api/v1/register', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({
-    //     "name": data.get('firstName') + data.get("lastName"),
-    //     "email": data.get("email"),
-    //     "password": data.get("password"),
-    //     "phone": {
-    //       "country_isd_code": data.get("country_isd_code"),
-    //       "number": data.get("number")
-    //     },
-    //     "address": {
-    //       "street": data.get("street"),
-    //       "city": data.get("city"),
-    //       "state": data.get("state"),
-    //       "postalCode": data.get("postalCode"),
-    //       "country": data.get("country")
-    //     },
-    //     "role": role
-    //   }),
-    // }).then((res) => {
-    //   return (res.json())
-    // }).then((data) => {
-    //   console.log(data)
-    //   cookies.set('token', data.data);
-    //   console.log(cookies.get('token'));
-    // });
-    // window.location.reload();
-    // window.location.href = '/';
+      body: JSON.stringify({
+        "name": data.get('firstName') + data.get("lastName"),
+        "email": data.get("email"),
+        "password": data.get("password"),
+        "phone": {
+          "country_isd_code": data.get("country_isd_code"),
+          "number": data.get("number")
+        },
+        "address": {
+          "street": data.get("street"),
+          "city": data.get("city"),
+          "state": data.get("state"),
+          "postalCode": data.get("postalCode"),
+          "country": data.get("country")
+        },
+        "role": role
+      }),
+    }).then((res) => {
+      return (res.json())
+    }).then((data) => {
+      console.log(data)
+    });
 
   };
   const [role, setRole] = React.useState('');

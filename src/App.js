@@ -15,6 +15,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Header from 'newdashboard/Header';
 import Team from 'task/Team';
 import Tform from 'task/Tform';
+import Eform from 'task/Eform';
 import Work from 'task/Work';
 import Members from 'task/Members';
 import Pay from 'pay/Pay';
@@ -62,6 +63,7 @@ export default function App() {
                 <Route path="Work" element={<Work />}/>
                 <Route path="Team" element={<Team />}/>
                 <Route path="Tform" element={<Tform />}/>
+                <Route path="Eform" element={<Eform />}/>
                 <Route path="Pay" element={<Pay />}/>
                 <Route path="Trans" element={<Trans/>}/>
                 <Route path="SignIn" element={<SignIn/>}/>
