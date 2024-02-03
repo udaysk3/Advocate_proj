@@ -28,6 +28,7 @@ import Maindash from 'pages/Maindash';
 
 
 
+
 export default function App() {
   const defaultTheme = createTheme();
   return (
@@ -35,6 +36,7 @@ export default function App() {
       <ThemeProvider theme={defaultTheme}>
         <Box sx={{ display: 'flex' }}>
           <CssBaseline />
+          
           <Header />
 
           <Box

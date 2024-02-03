@@ -11,6 +11,10 @@ import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { mainListItems, secondaryListItems, thirdListItems } from './listItems';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import Button from '@mui/material/Button';
+import Cookies from 'universal-cookie';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open'
@@ -64,6 +68,19 @@ export default function Header() {
     setOpen(!open);
   };
 
+  const cookies = new Cookies();
+  const [signup, setSignup] = useState('signup');
+  const [link, setLink] = useState('/signup');
+  useEffect(() => {
+    if (cookies.get('token')) {
+      setSignup('Logout');
+      setLink('/logout');
+    } else {
+      setSignup('Signup');
+      setLink('/signup');
+    }
+  }, [cookies.get('token')]);
+
   return (
     <>
       <AppBar position="absolute" open={open}>
@@ -106,6 +123,24 @@ export default function Header() {
         </Toolbar>
         <Divider />
         <List component="nav">
+
+          <Link to={link}>
+            <Button
+              role="link"
+              variant="contained"
+              onClick={() => {
+                if (signup === 'Logout') {
+                  cookies.remove('token');
+                  window.location.reload();
+                }
+              }
+              }
+            >
+              {signup}
+            </Button>
+          </Link>
+
+
           {mainListItems}
           <Divider sx={{ my: 1 }} />
           {secondaryListItems}
